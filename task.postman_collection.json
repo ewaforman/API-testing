@@ -1,0 +1,592 @@
+{
+	"info": {
+		"_postman_id": "36aaa0e5-665a-47f8-9f5e-8892bca54fd7",
+		"name": "task",
+		"description": "ENV:  \nendpoint: https://restful-booker.herokuapp.com/{{method}}  \n documentation: [https://restful-booker.herokuapp.com/apidoc/index.html](https://restful-booker.herokuapp.com/apidoc/index.html)  \n ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26320768"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseData = pm.response.json();",
+							"// please save the token there to the global variables for the feature requests",
+							"pm.globals.set(\"Token\", responseData.token)",
+							"",
+							"pm.test(\"Assert status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Assert responce status text is OK\", () => {",
+							"  //please add the test",
+							"  pm.expect(pm.response.to.be.ok);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\" : \"admin\",\r\n    \"password\" : \"password123\"\r\n}"
+				},
+				"url": {
+					"raw": "{{endPoint}}auth",
+					"host": [
+						"{{endPoint}}auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all bookingIds",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseData = pm.response.json();",
+							"",
+							"pm.test(\"Assert status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Assert responce status text is OK\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(pm.response.to.be.ok);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endPoint}}booking",
+					"host": [
+						"{{endPoint}}booking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateBooking",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//  //please add the pre-requsts for your variables.\r",
+							"\r",
+							"pm.collectionVariables.set(\"totalPrice\", _.random(20, 100));\r",
+							"pm.collectionVariables.set(\"firstName\", \"Jimmy\");\r",
+							"pm.collectionVariables.set(\"lastName\", \"Brown\");\r",
+							"pm.collectionVariables.set(\"checkInDate\", \"2018-01-01\");\r",
+							"pm.collectionVariables.set(\"checkOutDate\", \"2018-01-03\");\r",
+							"pm.collectionVariables.set(\"additionalNeeds\", \"Breakfast&tea\");\r",
+							"pm.environment.set(\"deposidPaid\", true);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseData = pm.response.json();",
+							"const requestData = JSON.parse(pm.request.body.raw);",
+							"",
+							"  //please add snippet where save  bokingId to  the globalVariables for the feature requests",
+							"",
+							"  pm.globals.set(\"bookingId\", responseData.bookingid)",
+							"",
+							"pm.test(\"Assert status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Assert responce status text is OK\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(pm.response.to.be.ok);",
+							"});",
+							"",
+							"pm.test(\"User checkindate is the same like in requet\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(responseData.booking.bookingdates.checkin).to.eql(requestData.bookingdates.checkin)",
+							"});",
+							"",
+							"pm.test(\"User checkOutdate is the same like in requet\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(responseData.booking.bookingdates.checkout).to.eql(requestData.bookingdates.checkout)",
+							"});",
+							"",
+							"pm.test(\"User price is the same like in requet\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(responseData.booking.totalprice).to.eql(requestData.totalprice)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "//please add the body there\r\n\r\n{\r\n    \"firstname\" : \"{{firstName}}\",\r\n    \"lastname\" : \"{{lastName}}\",\r\n    \"totalprice\" : {{totalPrice}},\r\n    \"depositpaid\" : {{deposidPaid}},\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"{{checkInDate}}\",\r\n        \"checkout\" : \"{{checkOutDate}}\"\r\n    },\r\n    \"additionalneeds\" : \"{{additionalNeeds}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endPoint}}booking",
+					"host": [
+						"{{endPoint}}booking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get info about user booking via id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseData = pm.response.json();",
+							"",
+							"",
+							"//please save your bookingId to the globalVariables.",
+							"",
+							"pm.test(\"Assert status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Assert responce status text is OK\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(pm.response.to.be.ok);",
+							"});",
+							"",
+							"pm.test(\"User firstname is the same like in requet\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(responseData.firstname).to.eql(pm.collectionVariables.get(\"firstName\"))",
+							"});",
+							"",
+							"pm.test(\"User lastname is the same like in requet\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(responseData.lastname).to.eql(pm.collectionVariables.get(\"lastName\"))",
+							"});",
+							"",
+							"pm.test(\"User price is the same like in requet\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(responseData.totalprice).to.eql(pm.collectionVariables.get(\"totalPrice\"))",
+							"});",
+							"",
+							"pm.test(\"User depositpaid is the same like in requet\", () => {",
+							"//please add the pm.expect there ",
+							"    pm.expect(responseData.depositpaid).to.eql(pm.environment.get(\"deposidPaid\"));",
+							"});",
+							"",
+							"",
+							"pm.test(\"User checkindate is the same like in requet\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(responseData.bookingdates.checkin).to.eql(pm.collectionVariables.get(\"checkInDate\"))",
+							"});",
+							"",
+							"pm.test(\"User checkOutdate is the same like in requet\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(responseData.bookingdates.checkout).to.eql(pm.collectionVariables.get(\"checkOutDate\"))",
+							"});",
+							"",
+							"pm.test(\"User additionalneeds is the same like in requet\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(responseData.additionalneeds).to.eql(pm.collectionVariables.get(\"additionalNeeds\"))",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endPoint}}booking/{{bookingId}}",
+					"host": [
+						"{{endPoint}}booking"
+					],
+					"path": [
+						"{{bookingId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseData = pm.response.json();",
+							"",
+							"const requestData = JSON.parse(pm.request.body.raw);",
+							"",
+							"pm.test(\"Assert status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Assert responce status text is OK\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(pm.response.to.be.ok)",
+							"});",
+							"",
+							"pm.test(\"User checkOutdate is the same like in requet\", () => {",
+							"    //please add the pm.expect there ",
+							"    pm.expect(responseData.bookingdates.checkout).to.eql(requestData.bookingdates.checkout)",
+							"});",
+							"",
+							"pm.test(\"User price is the same like in requet\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(responseData.totalprice).to.eql(requestData.totalprice)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//please add the pre-requests for your random variables\r",
+							"\r",
+							"pm.collectionVariables.set(\"totalPrice\", _.random(100, 500));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "{{Token}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic YWRtaW46cGFzc3dvcmQxMjM=",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "string",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "string",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "//please add the body\r\n{\r\n    \"firstname\": \"James\",\r\n    \"lastname\": \"Brown\",\r\n    \"totalprice\": {{totalPrice}},\r\n    \"depositpaid\": true,\r\n    \"bookingdates\": {\r\n        \"checkin\": \"2018-01-01\",\r\n        \"checkout\": \"2020-01-01\"\r\n    },\r\n    \"additionalneeds\": \"Breakfast\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endPoint}}booking/{{bookingId}}",
+					"host": [
+						"{{endPoint}}booking"
+					],
+					"path": [
+						"{{bookingId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update the part of info via patch",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseData = pm.response.json();",
+							"const requestData = JSON.parse(pm.request.body.raw);",
+							"",
+							"pm.test(\"Assert status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Assert responce status text is OK\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(pm.response.to.be.ok);",
+							"});",
+							"",
+							"pm.test(\"User depositpaid is the same like in requet\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(responseData.depositpaid).to.eql(requestData.depositpaid)",
+							"});",
+							"",
+							"pm.test(\"User additionalneeds is the same like in requet\", () => {",
+							"//please add the pm.expect there ",
+							"pm.expect(responseData.additionalneeds).to.eql(requestData.additionalneeds)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "{{Token}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic YWRtaW46cGFzc3dvcmQxMjM=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "// please add the body where would be updated depositpaid and additionalneeds\n//additionalneeds should be take value from the collection variables\n\n{\n    \"depositpaid\": true,\n    \"additionalneeds\": \"{{additionalNeeds}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endPoint}}booking/{{bookingId}}",
+					"host": [
+						"{{endPoint}}booking"
+					],
+					"path": [
+						"{{bookingId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"",
+							"pm.test(\"Assert status code is 201\", () => {",
+							"    pm.expect(pm.response.code).to.eql(201);",
+							"});",
+							"",
+							"pm.test(\"Assert responce status text is Created\", () => {",
+							"  //please add the pm.expect there ",
+							"  pm.expect(pm.response.to.be.nested)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWRtaW46cGFzc3dvcmQxMjM=",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{Token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{endPoint}}booking/{{bookingId}}",
+					"host": [
+						"{{endPoint}}booking"
+					],
+					"path": [
+						"{{bookingId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Try to get info about deleted booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Assert status code is 404\", () => {",
+							"    pm.expect(pm.response.code).to.eql(404);",
+							"});",
+							"",
+							"pm.test(\"Assert responce status text is Not Found\", () => {",
+							"   //please add the pm.expect there ",
+							"   pm.expect(pm.response.to.be.notFound);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endPoint}}booking/{{bookingId}}",
+					"host": [
+						"{{endPoint}}booking"
+					],
+					"path": [
+						"{{bookingId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "login",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "password",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "myLastName",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "myName",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userAdditionalRequest",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userAdditionalRequest2",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "firstName",
+			"value": ""
+		},
+		{
+			"key": "lastName",
+			"value": ""
+		},
+		{
+			"key": "totalPrice",
+			"value": ""
+		},
+		{
+			"key": "checkInDate",
+			"value": ""
+		},
+		{
+			"key": "checkOutDate",
+			"value": ""
+		},
+		{
+			"key": "additionalNeeds",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "additionalNeeds",
+			"value": ""
+		}
+	]
+}
